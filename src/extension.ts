@@ -8,6 +8,7 @@ import {
   TaskTreeItem,
   ActiveTaskProvider,
   CompletedTaskProvider,
+  //import svg assignment function
 } from "./taskManager";
 import Storage from "./storage";
 import Core from "./core";
@@ -42,6 +43,9 @@ export function generateUniqueId() {
 export function generateRandomColor(): string {
   return "#" + Math.floor(Math.random() * 16777215).toString(16);
 }
+
+// New Function Here
+// Function should call generaterandomcolor and generatesvg (from taskManager.ts)
 
 async function createTask(taskManagerProvider: TaskManagerProvider) {
   const taskName = await vscode.window.showInputBox({
