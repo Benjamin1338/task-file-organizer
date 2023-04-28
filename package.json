@@ -120,6 +120,10 @@
       {
         "command": "taskManager.renameTask",
         "title": "Rename Task"
+      },
+      {
+        "command": "taskManager.updateTaskColor",
+        "title": "Generate Random Task Color"
       }
     ],
     "menus": {
@@ -183,6 +187,10 @@
         {
           "command": "taskManager.renameTask",
           "when": "false"
+        },
+        {
+          "command": "taskManager.updateTaskColor",
+          "when": "false"
         }
       ],
       "view/item/context": [
@@ -223,6 +231,11 @@
           "group": "2_addRemoveTask"
         },
         {
+          "command": "taskManager.updateTaskColor",
+          "when": "view == taskManagerView && viewItem == task",
+          "group": "2_addRemoveTask"
+        },
+        {
           "command": "taskManager.addFileToTask",
           "when": "view == taskManagerView && viewItem == task",
           "group": "3_addRemoveFile"
@@ -257,6 +270,7 @@
           "when": "view == taskManagerView && viewItem == task",
           "group": "6_gitActions"
         }
+      
       ],
       "view/title": [
         {
