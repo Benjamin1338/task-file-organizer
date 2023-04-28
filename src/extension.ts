@@ -8,7 +8,7 @@ import {
   TaskTreeItem,
   ActiveTaskProvider,
   CompletedTaskProvider,
-  //import svg assignment function
+  generateRandomColor,
 } from "./taskManager";
 import Storage from "./storage";
 import Core from "./core";
@@ -39,13 +39,6 @@ export function generateUniqueId() {
     new Date().getTime().toString(36) + Math.random().toString(36).substr(2, 5)
   );
 }
-
-export function generateRandomColor(): string {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
-}
-
-// New Function Here
-// Function should call generaterandomcolor and generatesvg (from taskManager.ts)
 
 async function createTask(taskManagerProvider: TaskManagerProvider) {
   const taskName = await vscode.window.showInputBox({
@@ -142,7 +135,7 @@ async function addActiveFileToTask(taskManagerProvider: TaskManagerProvider, con
       vscode.window.showErrorMessage(`The file is already in the task "${task.name}".`);
       return;
     }
-		taskManagerProvider.addFileToTask(task, activeFilePath)
+		taskManagerProvider.addFileToTask(task, activeFilePath);
 		setColor(context, task.id, task.color, activeFilePath);
 	} else {
 	  vscode.window.showErrorMessage('Task not found.');
@@ -310,6 +303,13 @@ async function completeTask(
   activeTaskProvider.refresh()
 }
 
+async function updateTaskColor(
+  taskManagerProvider: TaskManagerProvider,
+  task: Task,
+  context: vscode.ExtensionContext,
+) {
+  taskManagerProvider.updateTaskColor(task.id, context);
+}
 
 function promptRestart() {
   vscode.window.showInformationMessage(
@@ -502,6 +502,11 @@ export function activate(context: vscode.ExtensionContext) {
         addFileToTask(taskManagerProvider, taskTreeItem.task, context)
     ),
     vscode.commands.registerCommand(
+      "taskManager.updateTaskColor",
+      (taskTreeItem: TaskTreeItem) =>
+      updateTaskColor(taskManagerProvider, taskTreeItem.task, context)
+    ),
+    vscode.commands.registerCommand(
       "taskManager.removeFileFromTask",
       (taskTreeItem: TaskTreeItem) =>
         removeFileFromTask(taskManagerProvider, taskTreeItem, context, storage)
@@ -509,7 +514,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "taskManager.completeTask",
       async (taskTreeItem: TaskTreeItem) => {
-        completeTask(taskManagerProvider, completedTaskProvider, activeTaskProvider, taskTreeItem.task, context, storage)
+        completeTask(taskManagerProvider, completedTaskProvider, activeTaskProvider, taskTreeItem.task, context, storage);
 	  }
     ),
     vscode.commands.registerCommand(

@@ -17,6 +17,10 @@ export interface TaskFile {
   filePath: string;
 }
 
+export function generateRandomColor(): string {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
+
 export function generateColoredCircleSvg(color: string): string {
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}">
@@ -146,6 +150,21 @@ export class TaskManagerProvider
     }
   }
 
+// New Function Here - Benji
+// Function should call generaterandomcolor and generatesvg (from taskManager.ts)
+  updateTaskColor(taskId: string, context: vscode.ExtensionContext): void {
+    const tasks = this.tasks;
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+    const task = tasks[taskIndex];
+    if (taskIndex !== -1) {
+      task.color = generateRandomColor();
+      for (const file of task.files) {
+        setColor(context, task.id, task.color, file.filePath);
+      }
+      this.storage.set("tasks", tasks);
+      this.refresh();
+    }
+}
   removeTask(task: Task): void {
     this.storage.remove("tasks", task);
     this.refresh();
